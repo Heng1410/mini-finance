@@ -14,6 +14,8 @@ urlpatterns = [
     path("api/v1/", include("account.urls")),
     path("api/v1/", include("journal.urls")),
     path("api/v1/", include("ledger.urls")),
+    path("api/v1/", include("accounts_receivable.urls")),
+    path("api/v1/", include("sequence.urls")),
 ]
 
 if settings.DEBUG:

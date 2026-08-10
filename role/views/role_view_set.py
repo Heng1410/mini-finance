@@ -10,6 +10,7 @@ from role.serializers.role_serializer import (
 class RoleViewSet(BaseViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
+    permission_classes = []
 
     def get_queryset(self):
         queryset = self.queryset.select_related("company")

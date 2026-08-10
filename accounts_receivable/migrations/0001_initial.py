@@ -14,21 +14,23 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Department',
+            name='Customer',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
+                ('code', models.CharField(db_index=True, max_length=32)),
                 ('name', models.CharField(max_length=255)),
-                ('code', models.CharField(max_length=16)),
-                ('description', models.TextField(blank=True, null=True)),
+                ('phone', models.CharField(max_length=32)),
+                ('email', models.EmailField(blank=True, max_length=254, null=True)),
+                ('address', models.CharField(blank=True, max_length=255, null=True)),
                 ('is_active', models.BooleanField(default=True)),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='departments', to='company.company')),
+                ('company', models.ForeignKey(editable=False, on_delete=django.db.models.deletion.PROTECT, to='company.company')),
             ],
             options={
-                'db_table': 'departments',
-                'ordering': ['name'],
-                'constraints': [models.UniqueConstraint(fields=('company', 'code'), name='uq_department_company_code'), models.UniqueConstraint(fields=('company', 'name'), name='uq_department_company_name')],
+                'db_table': 'customers',
+                'ordering': ('code',),
+                'constraints': [models.UniqueConstraint(fields=('company', 'code'), name='uq_customer_code')],
             },
         ),
     ]

@@ -19,6 +19,7 @@ class AccountSerializer(BaseSerializer):
             "parent",
             "description",
             "is_active",
+            "role",
         )
 
     def validate_code(self, code):
@@ -68,7 +69,7 @@ class AccountListSerializer(BaseSerializer):
 
     class Meta:
         model = Account
-        fields = ("id", "code", "name", "account_type", "parent", "is_active")
+        fields = ("id", "code", "name", "account_type", "parent", "is_active", "role")
 
 
 class AccountDetailSerializer(AccountSerializer):

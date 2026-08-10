@@ -11,6 +11,7 @@ from company.serializers.company_serializer import (
 class CompanyViewSet(BaseViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    permission_classes = []
 
     def get_serializer_class(self):
         if self.action == "list":

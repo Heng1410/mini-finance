@@ -7,6 +7,7 @@ class UserViewSet(BaseViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     ordering = ["-date_joined"]
+    permission_classes = []
 
     def get_queryset(self):
         return self.queryset.select_related("employee")

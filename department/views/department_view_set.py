@@ -10,6 +10,7 @@ from department.serializers.department_serializer import (
 class DepartmentViewSet(BaseViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
+    permission_classes = []
 
     def get_queryset(self):
         queryset = self.queryset.select_related("company")

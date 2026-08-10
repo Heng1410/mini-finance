@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # ------------------------------------------------------------------------------
 # Applications
@@ -40,6 +40,8 @@ LOCAL_APPS = [
     "account",
     "journal",
     "ledger",
+    "accounts_receivable",
+    "sequence",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

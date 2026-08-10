@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from account.constants import AccountType
+from account.constants import AccountRole, AccountType
 from base.models.company_base_model import CompanyBaseModel
 
 
@@ -14,6 +14,9 @@ class Account(CompanyBaseModel):
         "self", on_delete=models.PROTECT, related_name="children", null=True, blank=True
     )
     description = models.TextField(blank=True, null=True)
+    role = models.CharField(
+        max_length=30, choices=AccountRole.choices, null=True, blank=True
+    )
     is_active = models.BooleanField(default=True)
 
     class Meta:

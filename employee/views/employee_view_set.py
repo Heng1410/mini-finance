@@ -10,10 +10,11 @@ from employee.serializers.employee_serializer import (
 class EmployeeViewSet(BaseViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    permission_classes = []
 
     def get_queryset(self):
         queryset = self.queryset.select_related("company", "department", "manager","role")
-        return querysets
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
