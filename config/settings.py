@@ -42,7 +42,8 @@ LOCAL_APPS = [
     "ledger",
     "accounts_receivable",
     "sequence",
-    "inventory"
+    "inventory",
+    "sales_order"
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
