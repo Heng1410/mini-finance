@@ -39,12 +39,28 @@ class SalesInvoiceViewSet(CompanyBaseViewSet):
             return SalesInvoiceDetailSerializer
         return SalesInvoiceSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        invoice_status = self.request.query_params.get("status")
+        date_from = self.request.query_params.get("date_from")
+        date_to = self.request.query_params.get("date_to")
+
+        if invoice_status:
+            queryset = queryset.filter(status=invoice_status)
+        if date_from:
+            queryset = queryset.filter(invoice_date__gte=date_from)
+        if date_to:
+            queryset = queryset.filter(invoice_date__lte=date_to)
+        return queryset
+
     @action(detail=True, methods=["post"])
     def approve(self, request, pk=None):
         invoice = self.get_object()
 
         invoice = SalesInvoiceService.approve(invoice=invoice)
-        
+
         response_serializer = SalesInvoiceDetailSerializer(invoice)
 
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+

@@ -33,8 +33,6 @@ class SalesInvoiceListSerializer(BaseSerializer):
             "status",
             "total",
         )
-
-
 class SalesInvoiceDetailSerializer(BaseSerializer):
     customer = CustomerListSerializer(read_only=True)
     lines = SalesInvoiceLineDetailSerializer(read_only=True, many=True)

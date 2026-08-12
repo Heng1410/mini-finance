@@ -16,6 +16,7 @@ urlpatterns = [
     path("api/v1/", include("ledger.urls")),
     path("api/v1/", include("accounts_receivable.urls")),
     path("api/v1/", include("sequence.urls")),
+    path("api/v1/", include("inventory.urls")),
 ]
 
 if settings.DEBUG:

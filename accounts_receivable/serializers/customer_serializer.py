@@ -1,5 +1,8 @@
 from rest_framework import serializers
 
+from accounts_receivable.serializers.simple_sales_invoice_serializer import (
+    SimpleSalesInvoiceSerializer,
+)
 from base.serializers.base_serializer import BaseSerializer
 from accounts_receivable.models.customer import Customer
 
@@ -32,6 +35,21 @@ class CustomerListSerializer(BaseSerializer):
 
 
 class CustomerDetailSerializer(BaseSerializer):
+    invoices = serializers.SerializerMethodField()
+
     class Meta:
         model = Customer
-        fields = ("id", "code", "name", "phone", "email", "address", "is_active")
+        fields = (
+            "id",
+            "code",
+            "name",
+            "phone",
+            "email",
+            "address",
+            "is_active",
+            "invoices",
+        )
+
+    def get_invoices(self, obj):
+        invoices = obj.sales_invoices.all()
+        return SimpleSalesInvoiceSerializer(invoices, many=True).data
