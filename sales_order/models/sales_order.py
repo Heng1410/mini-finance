@@ -22,7 +22,7 @@ class SalesOrder(CompanyBaseModel):
     )
 
     class Meta:
-        db_table = "sales_order"
+        db_table = "sales_orders"
         constraints = [
             models.UniqueConstraint(
                 fields=["company", "order_number"], name="uq_order_number_per_company"

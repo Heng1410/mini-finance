@@ -12,8 +12,19 @@ from inventory.models.stock_reservation import StockReservation
 class StockReservationService:
     @classmethod
     @transaction.atomic
-    def reserve(cls, *, company, product, quantity, employee, expires_at):
-        product = Product.objects.select_for_update().get(pk=product.pk)
+    def reserve(
+        cls,
+        *,
+        company,
+        sales_order,
+        product,
+        quantity,
+        employee,
+        expires_at,
+    ):
+        product = Product.objects.select_for_update().get(
+            pk=product.pk, company=company
+        )
         stock_reservation = StockReservation.objects.filter(
             company=company, product=product, status=StockReserveStatus.PENDING
         )
@@ -27,6 +38,7 @@ class StockReservationService:
 
         reservation = StockReservation.objects.create(
             company=company,
+            sales_order=sales_order,
             product=product,
             quantity=quantity,
             reserved_by=employee,

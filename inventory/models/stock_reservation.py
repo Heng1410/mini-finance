@@ -5,9 +5,14 @@ from base.models.company_base_model import CompanyBaseModel
 from employee.models.employee import Employee
 from inventory.constants import StockReserveStatus
 from inventory.models.products import Product
+from sales_order.models.sales_order import SalesOrder
 
 
 class StockReservation(CompanyBaseModel):
+    sales_order = models.ForeignKey(
+        SalesOrder, on_delete=models.PROTECT, related_name="stock_reservations"
+    )
+
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name="stock_reservations"
     )
