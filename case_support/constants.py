@@ -15,3 +15,12 @@ class CasePriority(models.TextChoices):
     MEDIUM = "MEDIUM", "Medium"
     HIGH = "HIGH", "High"
     CRITICAL = "CRITICAL", "Critical"
+
+
+class CaseActivityType(models.TextChoices):
+    CREATED = "CREATED", "Created"
+    ASSIGNED = "ASSIGNED", "Assigned"
+    STATUS_CHANGED = "STATUS_CHANGED", "Status Changed"
+    COMMENTED = "COMMENTED", "Commented"
+    RESOLVED = "RESOLVED", "Resolved"
+    CLOSED = "CLOSED", "Closed"

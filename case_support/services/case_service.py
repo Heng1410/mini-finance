@@ -2,8 +2,10 @@ from django.db import transaction
 from rest_framework import serializers
 
 from accounts_receivable.models.customer import Customer
-from case_support.constants import CaseStatus
+from case_support.constants import CaseActivityType, CaseStatus
 from case_support.models.case import Case
+from case_support.models.case_activity import CaseActivity
+from case_support.services.case_sla_service import CaseSlaService
 from employee.models.employee import Employee
 from sequence.services.sequence_service import SequenceService
 
@@ -11,7 +13,7 @@ from sequence.services.sequence_service import SequenceService
 class CaseService:
     @classmethod
     @transaction.atomic
-    def create_case(cls, *, company, customer, title, description, priority):
+    def create_case(cls, *, company, customer, title, description, priority, employee):
 
         customer = Customer.objects.get(pk=customer.pk, company=company)
 
@@ -26,11 +28,21 @@ class CaseService:
             customer=customer,
         )
 
+        CaseActivity.objects.create(
+            company=company,
+            case=case,
+            activity_type=CaseActivityType.CREATED,
+            message="Case Created",
+            created_by=employee,
+        )
+
+        CaseSlaService.create_sla(company=company, case=case)
+
         return case
 
     @classmethod
     @transaction.atomic
-    def assign_case(cls, *, company, case, employee):
+    def assign_case(cls, *, company, case, employee, assigned_by):
         case = Case.objects.select_for_update().get(pk=case.id, company=company)
 
         if case.status != CaseStatus.OPEN:
@@ -43,6 +55,14 @@ class CaseService:
         case.status = CaseStatus.ASSIGNED
         case.assigned_to = employee
         case.save(update_fields=["assigned_to", "status"])
+
+        CaseActivity.objects.create(
+            company=company,
+            case=case,
+            activity_type=CaseActivityType.ASSIGNED,
+            message=f"Case assigned to {employee.first_name} {employee.last_name}",
+            created_by=assigned_by,
+        )
 
         return case
 
@@ -58,6 +78,14 @@ class CaseService:
 
         case.status = CaseStatus.IN_PROGRESS
         case.save(update_fields=["status"])
+
+        CaseActivity.objects.create(
+            company=company,
+            case=case,
+            activity_type=CaseActivityType.STATUS_CHANGED,
+            message="Case started and moved to IN_PROGRESS.",
+            created_by=case.assigned_to,
+        )
 
         return case
 
@@ -80,6 +108,14 @@ class CaseService:
         case.status = CaseStatus.RESOLVED
         case.save(update_fields=["status", "resolution_note"])
 
+        CaseActivity.objects.create(
+            company=company,
+            case=case,
+            activity_type=CaseActivityType.RESOLVED,
+            message=resolution_note,
+            created_by=case.assigned_to,
+        )
+
         return case
 
     @classmethod
@@ -94,5 +130,13 @@ class CaseService:
 
         case.status = CaseStatus.CLOSED
         case.save(update_fields=["status"])
+
+        CaseActivity.objects.create(
+            company=company,
+            case=case,
+            activity_type=CaseActivityType.CLOSED,
+            message="Case closed.",
+            created_by=case.assigned_to,
+        )
 
         return case

@@ -11,7 +11,9 @@ from case_support.serializers.case_serializer import (
     CaseListSerializer,
     CaseSerializer,
 )
+from case_support.serializers.case_activity_serializer import CaseActivitySerializer
 from case_support.services.case_service import CaseService
+from case_support.serializers.case_sla_serializer import CaseSlaSerializer
 
 
 class CaseViewSet(CompanyBaseViewSet):
@@ -35,6 +37,7 @@ class CaseViewSet(CompanyBaseViewSet):
             description=serializer.validated_data["description"],
             priority=serializer.validated_data["priority"],
             customer=serializer.validated_data["customer"],
+            employee=request.user.employee,
         )
 
         response_serializer = CaseDetailSerializer(case)
@@ -51,6 +54,7 @@ class CaseViewSet(CompanyBaseViewSet):
             company=self.get_company(),
             case=case,
             employee=employee,
+            assigned_by=request.user.employee,
         )
 
         response_serializer = CaseDetailSerializer(case)
@@ -96,3 +100,35 @@ class CaseViewSet(CompanyBaseViewSet):
         response_serializer = CaseDetailSerializer(case)
 
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=["get"])
+    def activities(self, request, pk=None):
+        case = self.get_object()
+
+        activities = case.activities.all()
+
+        print(activities)
+
+        serializer = CaseActivitySerializer(activities, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=["get"])
+    def sla(self, request, pk=None):
+        case = self.get_object()
+
+        sla = getattr(case, "sla", None)
+
+        if sla is None:
+
+            return Response(
+                {"detail": "SLA not found for this case."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = CaseSlaSerializer(sla)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+        )
