@@ -21,7 +21,8 @@ urlpatterns = [
     path("api/v1/", include("case_support.urls")),
     path("api/v1/", include("purchase_request.urls")),
     path("api/v1/", include("supplier.urls")),
-    path("api/v1/", include("purchase_order.urls"))
+    path("api/v1/", include("purchase_order.urls")),
+    path("api/v1/", include("notification.urls")),
 ]
 
 if settings.DEBUG:

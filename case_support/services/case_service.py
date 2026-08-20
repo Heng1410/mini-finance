@@ -7,6 +7,7 @@ from case_support.models.case import Case
 from case_support.models.case_activity import CaseActivity
 from case_support.services.case_sla_service import CaseSlaService
 from employee.models.employee import Employee
+from notification.services.notification_service import NotificationService
 from sequence.services.sequence_service import SequenceService
 
 
@@ -62,6 +63,13 @@ class CaseService:
             activity_type=CaseActivityType.ASSIGNED,
             message=f"Case assigned to {employee.first_name} {employee.last_name}",
             created_by=assigned_by,
+        )
+
+        NotificationService.create_notification(
+            company=company,
+            recipient=employee,
+            title="Case Assigned",
+            message=f"Case {case.case_number} has been assigned to you.",
         )
 
         return case
@@ -140,3 +148,5 @@ class CaseService:
         )
 
         return case
+    
+    # @classmethod

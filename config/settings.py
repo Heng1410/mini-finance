@@ -48,6 +48,7 @@ LOCAL_APPS = [
     "purchase_request",
     "supplier",
     "purchase_order",
+    "notification"
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
