@@ -48,7 +48,8 @@ LOCAL_APPS = [
     "purchase_request",
     "supplier",
     "purchase_order",
-    "notification"
+    "notification",
+    "travel",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -163,6 +164,8 @@ REST_FRAMEWORK = {
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
     ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
