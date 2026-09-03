@@ -25,6 +25,7 @@ urlpatterns = [
     path("api/v1/", include("notification.urls")),
     path("api/v1/", include("travel.urls")),
     path("api/v1/", include("transport.urls")),
+    path("api/v1/", include("currency.urls")),
 ]
 
 if settings.DEBUG:
