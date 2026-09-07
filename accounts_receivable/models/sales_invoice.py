@@ -3,6 +3,7 @@ from django.db import models
 from accounts_receivable.constants import InvoiceStatus
 from accounts_receivable.models.customer import Customer
 from base.models.company_base_model import CompanyBaseModel
+from delivery.models.delivery import Delivery
 from journal.models.journal_entry import JournalEntry
 
 
@@ -16,6 +17,13 @@ class SalesInvoice(CompanyBaseModel):
         JournalEntry,
         on_delete=models.PROTECT,
         related_name="sales_invoice",
+        null=True,
+        blank=True,
+    )
+    delivery = models.OneToOneField(
+        Delivery,
+        on_delete=models.PROTECT,
+        related_name="invoice",
         null=True,
         blank=True,
     )
