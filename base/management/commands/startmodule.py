@@ -72,9 +72,18 @@ class {self.class_name(name)}Config(AppConfig):
         for file_path, content in files.items():
             file_path.write_text(content, encoding="utf-8")
 
+        self.add_to_installed_apps(name)
+
+        self.stdout.write("")
         self.stdout.write(
             self.style.SUCCESS(
                 f"Successfully created module '{name}'."
+            )
+        )
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Added '{name}' to INSTALLED_APPS."
             )
         )
 
@@ -87,6 +96,40 @@ class {self.class_name(name)}Config(AppConfig):
                     f"  {path.relative_to(base_dir)}"
                 )
 
+    def add_to_installed_apps(self, name):
+        settings_file = Path(settings.__file__)
+
+        if not settings_file.exists():
+            raise CommandError(
+                "Could not find Django settings file."
+            )
+
+        content = settings_file.read_text(encoding="utf-8")
+
+        if f'"{name}"' in content or f"'{name}'" in content:
+            return
+
+        marker = "INSTALLED_APPS = ["
+
+        if marker not in content:
+            raise CommandError(
+                "Could not find INSTALLED_APPS in settings."
+            )
+
+        content = content.replace(
+            marker,
+            f'{marker}\n    "{name}",',
+            1,
+        )
+
+        settings_file.write_text(
+            content,
+            encoding="utf-8",
+        )
+
     @staticmethod
     def class_name(name):
-        return "".join(part.capitalize() for part in name.split("_"))
+        return "".join(
+            part.capitalize()
+            for part in name.split("_")
+        )
