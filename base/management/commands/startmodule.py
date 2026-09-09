@@ -1,3 +1,5 @@
+import os
+
 from pathlib import Path
 
 from django.conf import settings
@@ -97,7 +99,21 @@ class {self.class_name(name)}Config(AppConfig):
                 )
 
     def add_to_installed_apps(self, name):
-        settings_file = Path(settings.__file__)
+        settings_module = os.environ.get("DJANGO_SETTINGS_MODULE")
+
+        if not settings_module:
+            raise CommandError(
+                "DJANGO_SETTINGS_MODULE is not configured."
+            )
+
+        try:
+            settings_file = Path(
+                __import__(settings_module, fromlist=[""]).__file__
+            )
+        except (ImportError, AttributeError):
+            raise CommandError(
+                "Could not find Django settings file."
+            )
 
         if not settings_file.exists():
             raise CommandError(
@@ -109,11 +125,11 @@ class {self.class_name(name)}Config(AppConfig):
         if f'"{name}"' in content or f"'{name}'" in content:
             return
 
-        marker = "INSTALLED_APPS = ["
+        marker = "LOCAL_APPS = ["
 
         if marker not in content:
             raise CommandError(
-                "Could not find INSTALLED_APPS in settings."
+                "Could not find LOCAL_APPS in settings."
             )
 
         content = content.replace(

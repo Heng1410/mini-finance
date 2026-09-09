@@ -4,6 +4,7 @@ from base.models.base_model import BaseModel
 from company.models.company import Company
 from department.models.department import Department
 from role.models.role import Role
+from work_schedule.models.work_schedule import WorkSchedule
 
 
 # Create your models here.
@@ -13,6 +14,13 @@ class Employee(BaseModel):
     )
     department = models.ForeignKey(
         Department, on_delete=models.PROTECT, related_name="employees"
+    )
+    work_schedule = models.ForeignKey(
+        WorkSchedule,
+        on_delete=models.PROTECT,
+        related_name="employees",
+        null=True,
+        blank=True,
     )
     role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="employees")
     manager = models.ForeignKey(

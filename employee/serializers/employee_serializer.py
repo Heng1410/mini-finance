@@ -8,6 +8,7 @@ from department.serializers.department_serializer import DepartmentListSerialize
 from employee.models.employee import Employee
 from role.models.role import Role
 from role.serializers.role_serializer import RoleListSerializer
+from work_schedule.serializers.work_schedule_serializer import WorkScheduleSerializer
 
 
 class EmployeeSerializer(BaseSerializer):
@@ -34,6 +35,7 @@ class EmployeeSerializer(BaseSerializer):
             "hire_date",
             "job_title",
             "is_active",
+            "work_schedule",
         )
 
 
@@ -53,6 +55,7 @@ class EmployeeListSerializer(BaseSerializer):
     department = DepartmentListSerializer(read_only=True)
     role = RoleListSerializer(read_only=True)
     manager = EmployeeSimpleSerializer(read_only=True)
+    work_schedule = WorkScheduleSerializer(read_only=True)
 
     class Meta:
         model = Employee
@@ -69,6 +72,7 @@ class EmployeeListSerializer(BaseSerializer):
             "phone",
             "job_title",
             "is_active",
+            "work_schedule",
         )
 
 
@@ -77,4 +81,5 @@ class EmployeeDetailSerializer(EmployeeSerializer):
     department = DepartmentListSerializer(read_only=True)
     role = RoleListSerializer(read_only=True)
     manager = EmployeeSimpleSerializer(read_only=True)
+    work_schedule = WorkScheduleSerializer(read_only=True)
     pass
