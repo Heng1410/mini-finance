@@ -31,6 +31,9 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "employee_document",
+    "expense",
+    "payroll",
     "work_schedule",
     "base",
     "company",
