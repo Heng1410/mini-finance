@@ -32,6 +32,8 @@ urlpatterns = [
     path("api/v1/", include("work_schedule.urls")),
     path("api/v1/", include("payroll.urls")),
     path("api/v1/", include("expense.urls")),
+    path("api/v1/", include("employee_document.urls"))
+    path("api/v1/", include("performance.urls"))
 ]
 
 if settings.DEBUG:
